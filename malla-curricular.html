@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Curricular - Ingeniería en Ciencias y Sistemas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
+            color: #e0f0ff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #FF9800;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #FF9800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #ffd54f;
+            margin-bottom: 20px;
+        }
+        
+        .credits-container {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            display: inline-block;
+            margin: 15px 0;
+            border: 1px solid #FF9800;
+        }
+        
+        .credits {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #FF9800;
+        }
+        
+        .creator-small {
+            text-align: center;
+            margin-top: 10px;
+            color: #ffd54f;
+            font-size: 0.9rem;
+        }
+        
+        .creator-small strong {
+            color: #FF9800;
+            font-weight: bold;
+        }
+        
+        .malla-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .year-container {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border: 1px solid #FF5722;
+        }
+        
+        .year-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #FF9800;
+        }
+        
+        .year-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #FF9800;
+            margin-right: 15px;
+        }
+        
+        .semesters-container {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .semester {
+            flex: 1;
+            background: rgba(40, 40, 40, 0.7);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #FF5722;
+        }
+        
+        .semester-title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            color: #FFC107;
+            font-size: 1.4rem;
+            border-bottom: 1px solid #FF5722;
+        }
+        
+        .materias-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .materia {
+            background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
+            border: 1px solid #FF9800;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .materia:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 152, 0, 0.2), transparent);
+            z-index: 0;
+        }
+        
+        .materia:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            border-color: #FFC107;
+        }
+        
+        .materia.disabled {
+            background: linear-gradient(135deg, #5a3e1f 0%, #8B4513 100%);
+            border-color: #5a3e1f;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .materia.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .materia.completed {
+            background: linear-gradient(135deg, #5a3e1f 0%, #8B4513 100%);
+            border-color: #FF9800;
+        }
+        
+        .materia.completed .materia-nombre {
+            color: #ffecb3;
+        }
+        
+        .materia-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .materia-nombre {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fff;
+            flex: 1;
+        }
+        
+        .creditos-badge {
+            background: rgba(255, 152, 0, 0.3);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #fff;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .requisitos {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #ffecb3;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        button {
+            background: linear-gradient(to right, #FF9800, #FF5722);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid #FF5722;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to right, #FF5722, #FF9800);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #FF9800;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-icon {
+            font-size: 1.5rem;
+        }
+        
+        .status-text {
+            font-size: 1rem;
+        }
+        
+        .completed-icon {
+            color: #FF9800;
+        }
+        
+        .disabled-icon {
+            color: #8B4513;
+        }
+        
+        .available-icon {
+            color: #FFC107;
+        }
+        
+        @media (max-width: 1100px) {
+            .semesters-container {
+                flex-direction: column;
+            }
+            
+            .materias-container {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .year-title {
+                font-size: 1.5rem;
+            }
+            
+            .materia {
+                padding: 12px;
+            }
+            
+            .materia-nombre {
+                font-size: 0.95rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Malla Curricular</h1>
+            <div class="subtitle">Ingeniería en Ciencias y Sistemas</div>
+            <div class="credits-container">
+                <span class="credits">Créditos acumulados: <span id="total-creditos">0</span></span>
+            </div>
+            <div class="creator-small">
+                <p>Creado por <strong>Álvaro Girón</strong></p>
+            </div>
+        </header>
+        
+        <div class="status-bar">
+            <div class="status-item">
+                <i class="fas fa-check-circle status-icon completed-icon"></i>
+                <span class="status-text">Materia completada</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-unlock status-icon available-icon"></i>
+                <span class="status-text">Disponible para cursar</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-lock status-icon disabled-icon"></i>
+                <span class="status-text">Requisitos pendientes</span>
+            </div>
+        </div>
+        
+        <div class="malla-grid" id="malla-container">
+            <!-- La malla se generará dinámicamente con JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <button id="btn-completar-todo"><i class="fas fa-check-double"></i> Completar todo</button>
+            <button id="btn-reiniciar"><i class="fas fa-redo"></i> Reiniciar malla</button>
+            <button id="btn-share"><i class="fas fa-share-alt"></i> Compartir</button>
+        </div>
+    </div>
+
+    <script>
+        // Datos de la malla curricular
+        const mallaData = {
+            "mallaData": [
+                {
+                    "año": 1,
+                    "periodo": "anual",
+                    "materias": []
+                },
+                {
+                    "año": 1,
+                    "periodo": "Semestre 1",
+                    "materias": [
+                        {
+                            "id": "074bbe3b-d38d-467c-895e-18526d136f89",
+                            "nombre": "0005 Técnicas de estudio e investigación",
+                            "tipo": "ninguno",
+                            "requisitos": [],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "4918aa2b-ae63-4076-831c-6767c30518fd",
+                            "nombre": "0017 Social Humanística 1",
+                            "tipo": "ninguno",
+                            "requisitos": [],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "7d8491c3-5cdb-4560-94b8-a62a68233d33",
+                            "nombre": "0101 Matemática Básica 1",
+                            "tipo": "ninguno",
+                            "requisitos": [],
+                            "creditos": 9,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "4259d75b-a9ac-408a-8546-cc4179f3f7f9",
+                            "nombre": "0006 Idioma Técnico 1",
+                            "tipo": "ninguno",
+                            "requisitos": [],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "45f43adf-2b50-4d4d-be57-74139ba5e274",
+                            "nombre": "0039 Deportes 1",
+                            "tipo": "ninguno",
+                            "requisitos": [],
+                            "creditos": 2,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 1,
+                    "periodo": "Semestre 2",
+                    "materias": [
+                        {
+                            "id": "148851b9-5797-46ae-8b79-369ec1335f26",
+                            "nombre": "0019 Social Humanística 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "4918aa2b-ae63-4076-831c-6767c30518fd"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "d76ea4b6-075e-4286-98b7-f8253bc14237",
+                            "nombre": "0103 Matemática Básica 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "7d8491c3-5cdb-4560-94b8-a62a68233d33"
+                            ],
+                            "creditos": 9,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "377846cd-e570-49ca-a247-d5268e24ef7a",
+                            "nombre": "0147 Física Básica",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "7d8491c3-5cdb-4560-94b8-a62a68233d33"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "cbf97ef7-76af-498b-b16f-b654dc1e9502",
+                            "nombre": "0768 Introducción a los Algoritmos y Flujos de Datos",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "7d8491c3-5cdb-4560-94b8-a62a68233d33"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "af05eb8b-e7d8-4b44-bb9b-b9d53b17527e",
+                            "nombre": "0960 Matemática para computación 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "7d8491c3-5cdb-4560-94b8-a62a68233d33"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "c1d24612-9ba3-4eea-ab3f-b6d00d2dbf11",
+                            "nombre": "0008 Idioma Técnico 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "4259d75b-a9ac-408a-8546-cc4179f3f7f9"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "b0d04f20-5b07-4f3a-8ba2-1edf4cdd8213",
+                            "nombre": "0040 Deportes 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "45f43adf-2b50-4d4d-be57-74139ba5e274"
+                            ],
+                            "creditos": 2,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 2,
+                    "periodo": "anual",
+                    "materias": []
+                },
+                {
+                    "año": 2,
+                    "periodo": "Semestre 1",
+                    "materias": [
+                        {
+                            "id": "9561dfb1-3746-4395-9a00-c8cc2810ef89",
+                            "nombre": "0089 Comunicación Asertiva",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d76ea4b6-075e-4286-98b7-f8253bc14237",
+                                "377846cd-e570-49ca-a247-d5268e24ef7a",
+                                "af05eb8b-e7d8-4b44-bb9b-b9d53b17527e"
+                            ],
+                            "creditos": 2,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "742cd8da-5d4b-410e-b649-a40d44b86619",
+                            "nombre": "0107 Matemática Intermedia 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d76ea4b6-075e-4286-98b7-f8253bc14237"
+                            ],
+                            "creditos": 9,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "f99b0376-881c-4084-abb1-ba2a23281f97",
+                            "nombre": "0150 Física 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d76ea4b6-075e-4286-98b7-f8253bc14237",
+                                "377846cd-e570-49ca-a247-d5268e24ef7a"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "4d2e5d83-6ada-45f6-bde3-772494313e72",
+                            "nombre": "0770 Introducción a la programación y computación 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "cbf97ef7-76af-498b-b16f-b654dc1e9502",
+                                "d76ea4b6-075e-4286-98b7-f8253bc14237",
+                                "377846cd-e570-49ca-a247-d5268e24ef7a",
+                                "af05eb8b-e7d8-4b44-bb9b-b9d53b17527e"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "1412c8d9-3175-4a33-9d3a-60711bf99b0d",
+                            "nombre": "0795 Lógica de sistemas",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d76ea4b6-075e-4286-98b7-f8253bc14237",
+                                "377846cd-e570-49ca-a247-d5268e24ef7a",
+                                "af05eb8b-e7d8-4b44-bb9b-b9d53b17527e"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "5289bdc4-4d5f-431b-a381-521ffe8eef35",
+                            "nombre": "0962 Matemática para computación 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d76ea4b6-075e-4286-98b7-f8253bc14237",
+                                "377846cd-e570-49ca-a247-d5268e24ef7a",
+                                "af05eb8b-e7d8-4b44-bb9b-b9d53b17527e"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "6d976f48-6111-4a08-8de1-21bcf5acc451",
+                            "nombre": "0001 Ética Profesional",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "148851b9-5797-46ae-8b79-369ec1335f26"
+                            ],
+                            "creditos": 2,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "627d4104-7bae-477c-b0f4-f9d9bcabb4d4",
+                            "nombre": "0009 Idioma Técnico 3",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "c1d24612-9ba3-4eea-ab3f-b6d00d2dbf11"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 2,
+                    "periodo": "Semestre 2",
+                    "materias": [
+                        {
+                            "id": "9ede1cfa-a22b-4865-83e3-ff44677efcb1",
+                            "nombre": "0112 Matemática Intermedia 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "742cd8da-5d4b-410e-b649-a40d44b86619"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "45be7aa2-dd08-42e3-8f80-ef160f4d49c4",
+                            "nombre": "0114 Matemática Intermedia 3",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "742cd8da-5d4b-410e-b649-a40d44b86619"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "2a740bf7-4767-41ac-9303-790d27e84cf4",
+                            "nombre": "0152 Física 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "742cd8da-5d4b-410e-b649-a40d44b86619",
+                                "f99b0376-881c-4084-abb1-ba2a23281f97"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "d7a8f186-0560-4896-9bdf-dca0f10ff90a",
+                            "nombre": "0771 Introducción a la programación y computación 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "742cd8da-5d4b-410e-b649-a40d44b86619",
+                                "4d2e5d83-6ada-45f6-bde3-772494313e72",
+                                "1412c8d9-3175-4a33-9d3a-60711bf99b0d",
+                                "5289bdc4-4d5f-431b-a381-521ffe8eef35"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "f7ab1ac3-783d-4814-94b7-24a9f714ad87",
+                            "nombre": "0964 Organización computacional",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "9561dfb1-3746-4395-9a00-c8cc2810ef89",
+                                "f99b0376-881c-4084-abb1-ba2a23281f97",
+                                "4d2e5d83-6ada-45f6-bde3-772494313e72",
+                                "5289bdc4-4d5f-431b-a381-521ffe8eef35"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "cf5dc96d-0061-4635-9ad5-2d5d18cfe912",
+                            "nombre": "2025 Prácticas Iniciales",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "9561dfb1-3746-4395-9a00-c8cc2810ef89",
+                                "742cd8da-5d4b-410e-b649-a40d44b86619",
+                                "4d2e5d83-6ada-45f6-bde3-772494313e72"
+                            ],
+                            "creditos": 0,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "7c6e7b88-d54b-410e-a793-739cb64deb92",
+                            "nombre": "0010 Lógica",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "148851b9-5797-46ae-8b79-369ec1335f26"
+                            ],
+                            "creditos": 1,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "7fcc8855-9027-49b8-b74c-896b9f151bb5",
+                            "nombre": "0011 Idioma Técnico 4",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "627d4104-7bae-477c-b0f4-f9d9bcabb4d4"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 3,
+                    "periodo": "anual",
+                    "materias": []
+                },
+                {
+                    "año": 3,
+                    "periodo": "Semestre 1",
+                    "materias": [
+                        {
+                            "id": "6d7b3121-ed73-41a5-913c-b67269f0676c",
+                            "nombre": "0116 Matemática Aplicada 3",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "9ede1cfa-a22b-4865-83e3-ff44677efcb1",
+                                "45be7aa2-dd08-42e3-8f80-ef160f4d49c4"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "bf036cbe-59d0-4799-ba5c-fae2434006a6",
+                            "nombre": "0118 Matemática Aplicada 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "9ede1cfa-a22b-4865-83e3-ff44677efcb1",
+                                "45be7aa2-dd08-42e3-8f80-ef160f4d49c4"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "0b27779c-aad0-4236-a94f-e430f0e88cdd",
+                            "nombre": "0281 Sistemas Operativos 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "f7ab1ac3-783d-4814-94b7-24a9f714ad87"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "90ae09da-3e53-4504-b236-64071230a4c9",
+                            "nombre": "0732 Estadística 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "074bbe3b-d38d-467c-895e-18526d136f89",
+                                "742cd8da-5d4b-410e-b649-a40d44b86619"
+                            ],
+                            "creditos": 0,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "d20636a6-5179-4a1b-b4b0-51465d860ff8",
+                            "nombre": "0772 Estructuras de datos",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d7a8f186-0560-4896-9bdf-dca0f10ff90a",
+                                "9561dfb1-3746-4395-9a00-c8cc2810ef89"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "1b2b8948-faf6-4fae-a9e7-fdbb11836678",
+                            "nombre": "0778 Arquitectura de Computadores y Ensambladores 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "f7ab1ac3-783d-4814-94b7-24a9f714ad87"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "f1aa6ead-f84f-4e17-8f06-998c526e0562",
+                            "nombre": "0018 Filosofía de la Ciencia",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "148851b9-5797-46ae-8b79-369ec1335f26"
+                            ],
+                            "creditos": 1,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 3,
+                    "periodo": "Semestre 2",
+                    "materias": [
+                        {
+                            "id": "1326647b-f972-4712-a2ab-38813862795e",
+                            "nombre": "0014 Economía",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "90ae09da-3e53-4504-b236-64071230a4c9"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "e7013d93-3fd5-4bdb-a421-fad3f9647ff0",
+                            "nombre": "0601 Investigación de Operaciones 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "90ae09da-3e53-4504-b236-64071230a4c9",
+                                "d7a8f186-0560-4896-9bdf-dca0f10ff90a"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "601b1e37-3c57-499a-a2fd-f50426f980ef",
+                            "nombre": "0722 Teoría de Sistemas 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "6d7b3121-ed73-41a5-913c-b67269f0676c",
+                                "bf036cbe-59d0-4799-ba5c-fae2434006a6",
+                                "d20636a6-5179-4a1b-b4b0-51465d860ff8",
+                                "90ae09da-3e53-4504-b236-64071230a4c9"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "09e4aa4e-9c20-4150-8558-1f70b26efa17",
+                            "nombre": "0767 Nuevas Infraestructuras para TIC",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "0b27779c-aad0-4236-a94f-e430f0e88cdd",
+                                "1b2b8948-faf6-4fae-a9e7-fdbb11836678"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "30a1e261-5396-4f0b-b9e4-1b8a2f604b91",
+                            "nombre": "0774 Sistemas de Bases de Datos 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d20636a6-5179-4a1b-b4b0-51465d860ff8"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "74c316e6-a1d7-4beb-9753-d4d41ece8984",
+                            "nombre": "0796 Lenguajes Formales y de Programación",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d20636a6-5179-4a1b-b4b0-51465d860ff8",
+                                "1b2b8948-faf6-4fae-a9e7-fdbb11836678"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "977ee0b7-e1d7-4336-b0d2-7fa092ca5ef9",
+                            "nombre": "0120 Matemática Aplicada 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "bf036cbe-59d0-4799-ba5c-fae2434006a6"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "7000d1f3-3035-499e-bb02-adb6688218da",
+                            "nombre": "0122 Matemática Aplicada 4",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "bf036cbe-59d0-4799-ba5c-fae2434006a6"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "86eb37b8-53f5-4ccd-8a99-f862c06ce9cf",
+                            "nombre": "0200 Ingeniería Eléctrica 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "45be7aa2-dd08-42e3-8f80-ef160f4d49c4",
+                                "2a740bf7-4767-41ac-9303-790d27e84cf4"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 4,
+                    "periodo": "anual",
+                    "materias": []
+                },
+                {
+                    "año": 4,
+                    "periodo": "Semestre 1",
+                    "materias": [
+                        {
+                            "id": "fc90761f-6e3a-403e-9f96-15ffb4766add",
+                            "nombre": "0603 Investigación de Operaciones 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "e7013d93-3fd5-4bdb-a421-fad3f9647ff0"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "99706aa0-8439-4a63-9dd8-b583b0119289",
+                            "nombre": "0707 Gestión de Proyectos de TIC",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "601b1e37-3c57-499a-a2fd-f50426f980ef",
+                                "e7013d93-3fd5-4bdb-a421-fad3f9647ff0"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "eb9b3350-7a52-4624-8b18-adf584261e6d",
+                            "nombre": "0775 Sistemas de Bases de Datos 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "30a1e261-5396-4f0b-b9e4-1b8a2f604b91",
+                                "0b27779c-aad0-4236-a94f-e430f0e88cdd"
+                            ],
+                            "creditos": 7,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "5c45dabc-8e86-48f1-bef5-e6fccc88c35c",
+                            "nombre": "0777 Organización de Lenguajes y Compiladores 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "0b27779c-aad0-4236-a94f-e430f0e88cdd",
+                                "74c316e6-a1d7-4beb-9753-d4d41ece8984"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "96efae9d-7711-4a05-8a82-30abd50b58e2",
+                            "nombre": "0794 Seminario de Computación",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "09e4aa4e-9c20-4150-8558-1f70b26efa17",
+                                "74c316e6-a1d7-4beb-9753-d4d41ece8984"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "8d2f679c-3fac-4b8e-a4fe-17219a0353e5",
+                            "nombre": "2036 Prácticas Iniciales",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "09e4aa4e-9c20-4150-8558-1f70b26efa17",
+                                "601b1e37-3c57-499a-a2fd-f50426f980ef",
+                                "30a1e261-5396-4f0b-b9e4-1b8a2f604b91",
+                                "74c316e6-a1d7-4beb-9753-d4d41ece8984",
+                                "cf5dc96d-0061-4635-9ad5-2d5d18cfe912"
+                            ],
+                            "creditos": 0,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "ffa98d76-8b30-4dd9-8931-7127e5868d56",
+                            "nombre": "0734 Estadística 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "90ae09da-3e53-4504-b236-64071230a4c9"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 4,
+                    "periodo": "Semestre 2",
+                    "materias": [
+                        {
+                            "id": "2b002d97-4592-40b8-a8d4-2fee3497a5f3",
+                            "nombre": "0283 Análisis y Diseño de Sistemas 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "eb9b3350-7a52-4624-8b18-adf584261e6d"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "d219fa9d-3d84-4861-a840-9230d1c19cd6",
+                            "nombre": "0649 Contabilidad Financiera para Informáticos",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "fc90761f-6e3a-403e-9f96-15ffb4766add",
+                                "99706aa0-8439-4a63-9dd8-b583b0119289"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "2798bb40-278c-4f6d-83ce-2c85cbe4e9f3",
+                            "nombre": "0719 Nuevas Tecnologías para Desarrollo de Software",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "eb9b3350-7a52-4624-8b18-adf584261e6d"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "4c30f07e-e8e5-4baf-91c5-877b8a2337de",
+                            "nombre": "0786 Sistemas Organizacionales y Gerenciales 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "99706aa0-8439-4a63-9dd8-b583b0119289",
+                                "fc90761f-6e3a-403e-9f96-15ffb4766add"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "62b74d84-fe8c-4820-96fe-5083f73d88cb",
+                            "nombre": "0970 Redes de Computadoras 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "96efae9d-7711-4a05-8a82-30abd50b58e2"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "2196cfdd-d9f3-47fd-a1c6-0f9ee942107a",
+                            "nombre": "0972 Inteligencia Artificial 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "5c45dabc-8e86-48f1-bef5-e6fccc88c35c",
+                                "d20636a6-5179-4a1b-b4b0-51465d860ff8"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "ce5f88a4-76bd-4da0-a9a3-f92c246346ec",
+                            "nombre": "0700 Ingeniería Económica 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "90ae09da-3e53-4504-b236-64071230a4c9"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "a20a39c2-26f9-4cb3-a9a2-4a3be2814321",
+                            "nombre": "0776 Bases de Datos Avanzadas",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "eb9b3350-7a52-4624-8b18-adf584261e6d"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 5,
+                    "periodo": "anual",
+                    "materias": []
+                },
+                {
+                    "año": 5,
+                    "periodo": "Semestre 1",
+                    "materias": [
+                        {
+                            "id": "ff2bb7cf-ea80-4f59-aa00-3929417b890c",
+                            "nombre": "0729 Modelación y Simulación 1",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "fc90761f-6e3a-403e-9f96-15ffb4766add",
+                                "601b1e37-3c57-499a-a2fd-f50426f980ef"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "716773af-bae0-4f9a-9ab8-681a0aa525b7",
+                            "nombre": "0785 Análisis y Diseño de Sistemas 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "2b002d97-4592-40b8-a8d4-2fee3497a5f3"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "2fb712e6-db30-4e2d-a122-99121ca5395c",
+                            "nombre": "0787 Sistemas Organizacionales y Gerenciales 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "d219fa9d-3d84-4861-a840-9230d1c19cd6",
+                                "4c30f07e-e8e5-4baf-91c5-877b8a2337de"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "3878df89-7a75-465a-a177-3f66654bacbe",
+                            "nombre": "0793 Seminario de Software ",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "2798bb40-278c-4f6d-83ce-2c85cbe4e9f3",
+                                "2b002d97-4592-40b8-a8d4-2fee3497a5f3"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "bf8d20fe-0223-448e-ab5c-697a5b56f4c1",
+                            "nombre": "0968 Inteligencia Artificial 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "2196cfdd-d9f3-47fd-a1c6-0f9ee942107a"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "0439b7af-64b1-43bd-b0f7-fe6ec93c82c2",
+                            "nombre": "0975 Redes de Computadoras 2",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "62b74d84-fe8c-4820-96fe-5083f73d88cb"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "d395d657-49ab-4413-b802-f7f7b2cf7a84",
+                            "nombre": "2009 Prácticas Finales Ingeniería Ciencias y Sistemas",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "2b002d97-4592-40b8-a8d4-2fee3497a5f3",
+                                "2798bb40-278c-4f6d-83ce-2c85cbe4e9f3",
+                                "4c30f07e-e8e5-4baf-91c5-877b8a2337de",
+                                "2196cfdd-d9f3-47fd-a1c6-0f9ee942107a",
+                                "8d2f679c-3fac-4b8e-a4fe-17219a0353e5"
+                            ],
+                            "creditos": 0,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                },
+                {
+                    "año": 5,
+                    "periodo": "Semestre 2",
+                    "materias": [
+                        {
+                            "id": "2e91bd0b-ee89-4f5d-9423-7233c317480c",
+                            "nombre": "0469 Ciencia de Datos",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "bf8d20fe-0223-448e-ab5c-697a5b56f4c1"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "a143d8ac-add3-429d-99c5-d63f8031153c",
+                            "nombre": "0613 Prospectiva Tecnológica",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "ff2bb7cf-ea80-4f59-aa00-3929417b890c",
+                                "bf8d20fe-0223-448e-ab5c-697a5b56f4c1"
+                            ],
+                            "creditos": 5,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "14218d9f-a366-4f0a-85f9-48a602a3606f",
+                            "nombre": "0780 Software Avanzado",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "716773af-bae0-4f9a-9ab8-681a0aa525b7"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "4332579b-5360-462e-b93d-e55c6a83c359",
+                            "nombre": "0790 Emprendedores de Negocios Informáticos",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "2fb712e6-db30-4e2d-a122-99121ca5395c"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "4132ce96-33bd-4ef8-be10-2f8d53876add",
+                            "nombre": "0799 Seminario de Investigación",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "716773af-bae0-4f9a-9ab8-681a0aa525b7",
+                                "4c30f07e-e8e5-4baf-91c5-877b8a2337de",
+                                "3878df89-7a75-465a-a177-3f66654bacbe"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "8c5d6f87-d907-41b5-b2df-ec4e56cd59f9",
+                            "nombre": "0967 Seguridad Informática",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "0439b7af-64b1-43bd-b0f7-fe6ec93c82c2"
+                            ],
+                            "creditos": 4,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "4896dfb1-8fee-4cfa-aadd-b36129c8928c",
+                            "nombre": "0735 Auditoria de Proyectos de Software",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "716773af-bae0-4f9a-9ab8-681a0aa525b7"
+                            ],
+                            "creditos": 6,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "7dfbfdec-9239-4d7a-866b-0868f2bc3ac3",
+                            "nombre": "0974 Redes de Nueva Generación",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "0439b7af-64b1-43bd-b0f7-fe6ec93c82c2"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        },
+                        {
+                            "id": "fe34aa39-26a1-47cb-9e66-b46948d798bf",
+                            "nombre": "7999 Seminario de Investigación E.P.S. Sistemas",
+                            "tipo": "ninguno",
+                            "requisitos": [
+                                "716773af-bae0-4f9a-9ab8-681a0aa525b7",
+                                "4c30f07e-e8e5-4baf-91c5-877b8a2337de",
+                                "3878df89-7a75-465a-a177-3f66654bacbe"
+                            ],
+                            "creditos": 3,
+                            "requiereCreditos": 0
+                        }
+                    ]
+                }
+            ],
+            "estructuraPorAnio": [
+                {
+                    "tipo": "semestral",
+                    "periodos": [
+                        "Semestre 1",
+                        "Semestre 2"
+                    ]
+                },
+                {
+                    "tipo": "semestral",
+                    "periodos": [
+                        "Semestre 1",
+                        "Semestre 2"
+                    ]
+                },
+                {
+                    "tipo": "semestral",
+                    "periodos": [
+                        "Semestre 1",
+                        "Semestre 2"
+                    ]
+                },
+                {
+                    "tipo": "semestral",
+                    "periodos": [
+                        "Semestre 1",
+                        "Semestre 2"
+                    ]
+                },
+                {
+                    "tipo": "semestral",
+                    "periodos": [
+                        "Semestre 1",
+                        "Semestre 2"
+                    ]
+                }
+            ],
+            "cantidadAnios": 5
+        };
+
+        // Estado de la aplicación
+        const state = {
+            completedCourses: new Set(),
+            totalCredits: 0
+        };
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMalla();
+            setupEventListeners();
+        });
+
+        // Renderizar toda la malla curricular
+        function renderMalla() {
+            const mallaContainer = document.getElementById('malla-container');
+            mallaContainer.innerHTML = '';
+            
+            // Agrupar materias por año y semestre
+            const materiasPorAnio = {};
+            
+            mallaData.mallaData.forEach(item => {
+                if (item.periodo === 'Semestre 1' || item.periodo === 'Semestre 2') {
+                    if (!materiasPorAnio[item.año]) {
+                        materiasPorAnio[item.año] = {};
+                    }
+                    materiasPorAnio[item.año][item.periodo] = item.materias;
+                }
+            });
+            
+            // Crear la estructura de la malla
+            for (let año = 1; año <= mallaData.cantidadAnios; año++) {
+                const yearContainer = document.createElement('div');
+                yearContainer.className = 'year-container';
+                
+                const yearHeader = document.createElement('div');
+                yearHeader.className = 'year-header';
+                
+                const yearTitle = document.createElement('div');
+                yearTitle.className = 'year-title';
+                yearTitle.textContent = `Año ${año}`;
+                
+                yearHeader.appendChild(yearTitle);
+                yearContainer.appendChild(yearHeader);
+                
+                const semestersContainer = document.createElement('div');
+                semestersContainer.className = 'semesters-container';
+                
+                // Obtener materias para cada semestre
+                const semestre1 = materiasPorAnio[año]?.['Semestre 1'] || [];
+                const semestre2 = materiasPorAnio[año]?.['Semestre 2'] || [];
+                
+                // Renderizar semestre 1
+                const sem1Container = document.createElement('div');
+                sem1Container.className = 'semester';
+                
+                const sem1Title = document.createElement('div');
+                sem1Title.className = 'semester-title';
+                sem1Title.textContent = 'Semestre 1';
+                sem1Container.appendChild(sem1Title);
+                
+                const materias1Container = document.createElement('div');
+                materias1Container.className = 'materias-container';
+                semestre1.forEach(materia => renderMateria(materia, materias1Container));
+                sem1Container.appendChild(materias1Container);
+                semestersContainer.appendChild(sem1Container);
+                
+                // Renderizar semestre 2
+                const sem2Container = document.createElement('div');
+                sem2Container.className = 'semester';
+                
+                const sem2Title = document.createElement('div');
+                sem2Title.className = 'semester-title';
+                sem2Title.textContent = 'Semestre 2';
+                sem2Container.appendChild(sem2Title);
+                
+                const materias2Container = document.createElement('div');
+                materias2Container.className = 'materias-container';
+                semestre2.forEach(materia => renderMateria(materia, materias2Container));
+                sem2Container.appendChild(materias2Container);
+                semestersContainer.appendChild(sem2Container);
+                
+                yearContainer.appendChild(semestersContainer);
+                mallaContainer.appendChild(yearContainer);
+            }
+            
+            // Actualizar créditos
+            document.getElementById('total-creditos').textContent = state.totalCredits;
+        }
+
+        // Renderizar una materia individual
+        function renderMateria(materia, container) {
+            const materiaElement = document.createElement('div');
+            materiaElement.className = 'materia';
+            
+            // Comprobar si la materia está completada
+            if (state.completedCourses.has(materia.id)) {
+                materiaElement.classList.add('completed');
+            }
+            
+            // Comprobar si la materia está disponible
+            const isAvailable = isMateriaAvailable(materia);
+            if (!isAvailable && !state.completedCourses.has(materia.id)) {
+                materiaElement.classList.add('disabled');
+            }
+            
+            // Header con nombre y créditos
+            const materiaHeader = document.createElement('div');
+            materiaHeader.className = 'materia-header';
+            
+            const materiaNombre = document.createElement('div');
+            materiaNombre.className = 'materia-nombre';
+            materiaNombre.textContent = materia.nombre;
+            
+            const creditosBadge = document.createElement('div');
+            creditosBadge.className = 'creditos-badge';
+            creditosBadge.textContent = `${materia.creditos} CR`;
+            
+            materiaHeader.appendChild(materiaNombre);
+            materiaHeader.appendChild(creditosBadge);
+            materiaElement.appendChild(materiaHeader);
+            
+            // Requisitos
+            if (materia.requisitos.length > 0) {
+                const requisitos = document.createElement('div');
+                requisitos.className = 'requisitos';
+                requisitos.textContent = `Requisitos: ${materia.requisitos.length}`;
+                materiaElement.appendChild(requisitos);
+            }
+            
+            // Event listener para marcar/desmarcar la materia
+            materiaElement.addEventListener('click', () => {
+                if (!isAvailable && !state.completedCourses.has(materia.id)) return;
+                
+                toggleMateria(materia);
+            });
+            
+            container.appendChild(materiaElement);
+        }
+
+        // Comprobar si una materia está disponible
+        function isMateriaAvailable(materia) {
+            // Materias sin requisitos siempre están disponibles
+            if (materia.requisitos.length === 0) return true;
+            
+            // Verificar que todos los requisitos estén completados
+            return materia.requisitos.every(reqId => state.completedCourses.has(reqId));
+        }
+
+        // Alternar el estado de una materia
+        function toggleMateria(materia) {
+            if (state.completedCourses.has(materia.id)) {
+                // Desmarcar la materia
+                state.completedCourses.delete(materia.id);
+                state.totalCredits -= materia.creditos;
+            } else {
+                // Marcar la materia
+                state.completedCourses.add(materia.id);
+                state.totalCredits += materia.creditos;
+            }
+            
+            // Volver a renderizar toda la malla
+            renderMalla();
+        }
+
+        // Configurar event listeners para los botones
+        function setupEventListeners() {
+            document.getElementById('btn-completar-todo').addEventListener('click', completarTodo);
+            document.getElementById('btn-reiniciar').addEventListener('click', reiniciarMalla);
+            document.getElementById('btn-share').addEventListener('click', share);
+        }
+
+        // Marcar todas las materias como completadas
+        function completarTodo() {
+            state.completedCourses.clear();
+            state.totalCredits = 0;
+            
+            // Agregar todas las materias al estado completado
+            mallaData.mallaData.forEach(item => {
+                if (item.materias && item.materias.length > 0) {
+                    item.materias.forEach(materia => {
+                        state.completedCourses.add(materia.id);
+                        state.totalCredits += materia.creditos;
+                    });
+                }
+            });
+            
+            renderMalla();
+        }
+
+        // Reiniciar toda la malla
+        function reiniciarMalla() {
+            state.completedCourses.clear();
+            state.totalCredits = 0;
+            renderMalla();
+        }
+
+        // Compartir enlace
+        function share() {
+            const currentUrl = window.location.href;
+            navigator.clipboard.writeText(currentUrl).then(() => {
+                alert('¡Enlace copiado al portapapeles! Comparte este enlace para que otros vean tu malla.');
+            }).catch(err => {
+                console.error('Error al copiar: ', err);
+                alert('No se pudo copiar el enlace. Por favor, copia manualmente la URL de la barra de direcciones.');
+            });
+        }
+    </script>
+</body>
+</html>
